@@ -166,10 +166,42 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
           content: Text('${user.email} signed in'),
         ),
       );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MyHomePage()),
+
+
+      UserModel myUser = new UserModel(user.email, user.displayName ,user.uid);
+
+
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('User Details'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('email : ' + myUser.email),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Next Page'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyHomePage(title: "Shopping List",user: myUser)),
+                  );
+                },
+              ),
+            ],
+          );
+        },
       );
+
+
+
+
     } catch (e) {
       Scaffold.of(context).showSnackBar(
         const SnackBar(
@@ -178,4 +210,17 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
       );
     }
   }
+
+
+
 }
+
+class UserModel{
+  final String email;
+  final String userName;
+  final String UID;
+
+  UserModel(this.email, this.UID, this.userName);
+
+}
+

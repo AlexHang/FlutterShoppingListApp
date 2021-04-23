@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/product.dart';
 import 'package:flutter_app/sign_in.dart';
@@ -39,9 +40,9 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
 
+  final UserModel user;
 
 
-  MyHomePage({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -53,9 +54,10 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
+  MyHomePage({Key key, this.user, this.title}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(user);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -66,6 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Product> shoppingCart = [];
   List<Product> favorites = [];
   SearchBar searchBar;
+
+  final UserModel user;
 
   bool _initialized = false;
   bool _error = false;
@@ -96,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget mainPageBody;
 
 
-  _MyHomePageState(){
+  _MyHomePageState(this.user){
 
     updateMainBody();
     searchBar = new SearchBar(
