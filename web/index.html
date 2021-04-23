@@ -27,9 +27,34 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-firestore.js"></script>
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+
+
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyD-ibRI1oHpHEb2AbngAvLg2fTej9ekezY",
+      authDomain: "flutteriot-1f7f2.firebaseapp.com",
+      projectId: "flutteriot-1f7f2",
+      storageBucket: "flutteriot-1f7f2.appspot.com",
+      messagingSenderId: "982324757468",
+      appId: "1:982324757468:web:9e0205e66e7cc6e4290519"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
   <script>
     var serviceWorkerVersion = null;
     var scriptLoaded = false;

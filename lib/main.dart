@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/product.dart';
+import 'package:flutter_app/sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+
+
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -26,7 +32,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Colors.amber,
       ),
-      home: MyHomePage(title: 'My shopping list'),
+      home: SignInPage(),//MyHomePage(title: 'My shopping list'),
     );
   }
 }
@@ -60,6 +66,29 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Product> shoppingCart = [];
   List<Product> favorites = [];
   SearchBar searchBar;
+
+  bool _initialized = false;
+  bool _error = false;
+
+  void initializeFlutterFire() async{
+    try{
+      await Firebase.initializeApp();
+      setState(() {
+        _initialized = true;
+      });
+    }catch(e){
+      setState(() {
+        _error = true;
+      });
+    }
+  }
+
+  @override
+  void initState(){
+    initializeFlutterFire();
+    super.initState();
+  }
+
 
   int currentIndex = 0;
   List<Widget> mainPageWidgets = [];
@@ -162,6 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
 
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
