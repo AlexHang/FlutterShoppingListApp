@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app/userModel.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -18,6 +19,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
 
   bool _success;
   String _userEmail = '';
@@ -56,6 +59,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       return null;
                     },
                     obscureText: true,
+                  ),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(labelText: 'Name'),
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -105,6 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
       setState(() {
         _success = true;
         _userEmail = user.email;
+        UserModel.updateCurrentUser(UserModel(user.email, user.uid, _nameController.text ));
       });
     } else {
       _success = false;

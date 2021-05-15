@@ -2,11 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/product.dart';
 import 'package:flutter_app/sign_in.dart';
+import 'package:flutter_app/userModel.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 
 
 void main() {
@@ -67,12 +68,42 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController ProductQuantityController = TextEditingController();
   List<Product> shoppingCart = [];
   List<Product> favorites = [];
+
+
   SearchBar searchBar;
 
   final UserModel user;
 
   bool _initialized = false;
   bool _error = false;
+
+
+  Future getDocs() async {
+    QuerySnapshot querySnapshot = await Firestore.instance.collection("products").getDocuments();
+    for (int i = 0; i < querySnapshot.docs.length; i++) {
+      var a = querySnapshot.docs[i];
+      print(a.id + " "+ a.get("name") + " " + a.get("price") + " " + a.get("quantity"));
+      setState(() {
+        shoppingCart.add(Product(name: a.get("name"),
+            price: a.get("price"),
+            quantity: a.get("quantity")));
+        updateMainBody();
+      });
+    }
+
+    querySnapshot = await Firestore.instance.collection("favorites").getDocuments();
+    for (int i = 0; i < querySnapshot.docs.length; i++) {
+      var a = querySnapshot.docs[i];
+      print(a.id + " "+ a.get("name") + " " + a.get("price") + " " + a.get("quantity"));
+      setState(() {
+        favorites.add(Product(name: a.get("name"),
+            price: a.get("price"),
+            quantity: a.get("quantity")));
+        updateMainBody();
+      });
+    }
+
+  }
 
   void initializeFlutterFire() async{
     try{
@@ -90,6 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState(){
     initializeFlutterFire();
+    getDocs();
     super.initState();
   }
 
@@ -261,6 +293,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             if(direction == DismissDirection.startToEnd){
                               setState(() {
                                 favorites.add(shoppingCart[index]);
+                                Product.saveFavorite(shoppingCart[index]);
                                 shoppingCart.removeAt(index);
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(content: Text("Product " + shoppingCart[index].name +" saved to favorites")));
@@ -269,6 +302,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             }
                             if(direction == DismissDirection.endToStart){
                               setState(() {
+                                Product.deleteProduct(shoppingCart[index]);
                                 shoppingCart.removeAt(index);
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(content: Text("Product " + shoppingCart[index].name +" deleted")));
@@ -318,6 +352,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           onDismissed: (DismissDirection direction) {
                             if(direction == DismissDirection.startToEnd){
                               setState(() {
+                                Product.deleteFavorite(favorites[index]);
                                 favorites.removeAt(index);
                                 favorites.removeAt(index);
                                 ScaffoldMessenger.of(context)
@@ -380,6 +415,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     if(ProductNameController.text.trim()!="" && ProductPriceController.text.trim()!="" && ProductQuantityController.text.trim()!="")
                     setState(() {
                       shoppingCart.add(Product(name: ProductNameController.text, price: ProductPriceController.text, quantity: ProductQuantityController.text));
+                      Product.saveProduct(Product(name: ProductNameController.text, price: ProductPriceController.text, quantity: ProductQuantityController.text));
                       print(ProductNameController.text);
                       print(shoppingCart);
                       updateMainBody();

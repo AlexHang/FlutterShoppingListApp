@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app/userModel.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/register.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -215,12 +217,5 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
 
 }
 
-class UserModel{
-  final String email;
-  final String userName;
-  final String UID;
 
-  UserModel(this.email, this.UID, this.userName);
-
-}
 
